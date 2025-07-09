@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use App\Services\EmailSercice;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -45,6 +46,15 @@ class CreateNewUser implements CreatesNewUsers
         }
 
         $name = $input['firstname'] .' '. $input['lastname'] ;
+
+        $emailSend = new EmailSercice();
+
+        $subject = "Activate Your Account";
+        $message = "Hi" . $name . "please activate your account.Copy and paste your activation code !" . $activation_code
+                    ."or click to the link to activate your account". $activation_token;
+        $emailSend->sendEmail($subject, $email, $name, false, $message);  
+
+
 
         return User::create([
             'name' => $name,
